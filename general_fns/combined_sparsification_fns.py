@@ -78,12 +78,8 @@ def get_sparsify_probs(A, normalization={}, return_diffs=False,
     option and rely on the pred_cov_from_white_noise function, but this means
     that eigenvalues should NOT be 0.
 
-    Do we need to worry about some of the sampling probabilities being too small?
-    I don't think so, though note we do rescale by 1/samp_prob later for the ones 
-    that were selected so be a bit careful.
-
-    This should work for symmetric matrices too. Just need to zero out probs on one
-    side of the diagonal before passing to the sparsification fn (but double check).
+    This works for symmetric matrices too. Just need to zero out probs on one
+    side of the diagonal before passing to the sparsification fn.
     '''
     
     assert np.all(np.diag(A)<=0), 'Diagonal of A is positive!'
