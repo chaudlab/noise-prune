@@ -42,10 +42,6 @@ def get_pinv(inp_mat):
     double check that later. '''
 
     u, s, vh = la.svd(inp_mat)
-    
-    # Check reconstruction by SVD
-    # s_mat = np.diag(s)
-    # assert np.allclose(inp_mat, np.dot(np.dot(u,s_mat),vh)), 'reconstruction failed'
 
     s_inv = np.array([0. if np.abs(x)<1e-8 else 1./x for x in s])
     s_inv_mat = np.diag(s_inv)
@@ -92,7 +88,7 @@ def get_off_diag_row_sums(W, abs_val=True):
         row_sums = np.sum(W - np.diag(np.diag(W)), axis=1)
     return row_sums
 
-def shift_to_make_diagonally_dominant(W, shift_type='constant', diag_type='pos'): #can add a sign option here to decide whether diag is pos or neg, 
+def shift_to_make_diagonally_dominant(W, shift_type='constant', diag_type='pos'): 
     '''Convert W into a diagonally-dominant matrix, either by adding a 
     constant shift to every diagonal, or adding a diagonal matrix. 
     Note that this function partially takes into account an existing diagonal, 
@@ -105,7 +101,6 @@ def shift_to_make_diagonally_dominant(W, shift_type='constant', diag_type='pos')
     row_sums = get_off_diag_row_sums(W)
     if diag_type=='pos':
         if shift_type == 'constant':
-            # We want each of diag_els to be bigger than each of row_sums
             shift_amount = np.max(row_sums - diag_els)
             shift_W = W + shift_amount * np.eye(len(W))
         elif shift_type == 'individual':
@@ -114,7 +109,6 @@ def shift_to_make_diagonally_dominant(W, shift_type='constant', diag_type='pos')
             print('Unknown shift_type')
     if diag_type=='neg':
         if shift_type == 'constant':
-            # We want each of diag_els to be bigger than each of row_sums
             shift_amount = np.max(row_sums + diag_els)
             shift_W = W - shift_amount * np.eye(len(W))
         elif shift_type == 'individual':

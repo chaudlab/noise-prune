@@ -37,8 +37,6 @@ def predict_ou_cov(A, B):
     bbt = np.dot(B, B.conjugate().T)
     
     Q_tilde = np.dot(ev_inv, np.dot(bbt, ev_inv.conjugate().T))
-
-    # M = np.zeros_like(A)
     M = np.zeros((A.shape[0], A.shape[1]), dtype=complex) #this is tilde_C
 
     for i in range(N):

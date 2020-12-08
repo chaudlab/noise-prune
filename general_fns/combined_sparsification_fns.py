@@ -17,8 +17,6 @@ def compare_spectrum(S_new, ew_old, ev_old, ret_ew=False):
 
     spect_comp = {}
     ew_new = laf.sort_eig(S_new)
-    #print("new smallest eigvals are {}".format(ew_new[0:100]))
-    #print("old smallest eigvals are {}".format(ew_old[0:100]))
     
     # Measure how much the eigenvalues have moved
     spect_comp['eps_ew'] = np.real(ew_new / ew_old - 1)
@@ -63,7 +61,6 @@ def get_diff_matrix(C, sign_matrix):
 
     diags = np.diag(C) 
     i_matrix = np.expand_dims(diags, axis=1)
-    # This should be C[i,i] + C[j,j]
     diag_contribution = i_matrix + i_matrix.T
     diff_matrix = diag_contribution - 2*sign_matrix*C
     return diff_matrix
@@ -139,9 +136,7 @@ def set_diagonal(sparse_matrix, orig_matrix, diagonal_type='zero'):
     elif diagonal_type == 'zero':
         sparse_matrix_with_diag = sparse_matrix
     elif diagonal_type == 'row_sum':
-        # Changed sign
         assert np.all(np.diag(orig_matrix)<=0), 'Diagonal of A is positive!'
-        # Note change
         new_diag = np.diag(orig_matrix) + (laf.get_off_diag_row_sums(orig_matrix, abs_val=True) - 
             laf.get_off_diag_row_sums(sparse_matrix, abs_val=True))
         sparse_matrix_with_diag = sparse_matrix
@@ -169,17 +164,12 @@ def sparsify_given_probs(A, samp_probs, symmetric=False, diagonal_type='zero', r
     edges_to_keep = (np.random.rand(N, N) < samp_probs)
     sparse_matrix = np.zeros_like(A)
     if rescale:
-        sparse_matrix[edges_to_keep] = A[edges_to_keep] / samp_probs[edges_to_keep]
-        # Maybe should check that none of 1/samp_prob[edges_to_keep] is too big. For now
-        # just print
         print('Maximum rescale ', np.max(1./samp_probs[edges_to_keep]))
     else:
         sparse_matrix[edges_to_keep] = A[edges_to_keep]
 
     if symmetric==True:
         sparse_matrix_symm = sparse_matrix + sparse_matrix.T
-        # Note that we're not accounting for double-counting diagonal because should
-        # be 0 at this stage
         assert np.sum(np.abs(np.diag(sparse_matrix_symm)))<1e-8, 'nonzero diagonal'
         sparse_matrix_with_diag = set_diagonal(sparse_matrix_symm, A, diagonal_type=diagonal_type)
     else:

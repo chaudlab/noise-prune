@@ -22,8 +22,7 @@ def get_edge_list_from_adj_matrix(W, is_symmetric=False, get_wts=False):
         edge_list_idx = np.nonzero(np.triu(W,1))
     else:
         edge_list_idx = np.nonzero(W)
-    
-    # In both cases was returning np.transpose(edge_list_idx) before   
+      
     if get_wts:
         edge_wts = W[edge_list_idx]
         return edge_list_idx, edge_wts
@@ -75,8 +74,7 @@ def make_random_asymm_matrix_given_density(n_vertices, edges, entry_type='unifor
 def make_imb_asymm_clustered_graph(n_per_block, inner_block_edges, inter_block_edges):
     '''This is similar to undirected_graph_fns' make_imb_clustered_graph function,
     but uses asymmetric matrices for each cluster and asymmetric long range connections'''
-    
-    # I think could use np.sum(n_per_block) instead
+
     n_vertices = 0
     for each_block in n_per_block:
         n_vertices = n_vertices + each_block
@@ -88,7 +86,6 @@ def make_imb_asymm_clustered_graph(n_per_block, inner_block_edges, inter_block_e
     for each_block in n_per_block:
         curr_mat = make_random_asymm_matrix_given_density(each_block, edges=inner_block_edges, 
             entry_type='normal', params=graph_params)
-        # Maybe i1 = i0 + each_block?
         i0 = i1
         i1 = i1 + each_block
         W_without_lr[i0:i1, i0:i1] = curr_mat
@@ -97,8 +94,6 @@ def make_imb_asymm_clustered_graph(n_per_block, inner_block_edges, inter_block_e
     lr_conns = make_random_asymm_matrix_given_density(n_vertices, inter_block_edges, entry_type='uniform_positive')
     W_with_lr = W_without_lr + lr_conns
 
-    # Might be able to move this to the calling function and use the extremal ew function (since this is making
-    # a choice of the longest timescales for the network it returns)
     tmp_ew, tmp_ev = nla.eig(W_with_lr)
     W = W_with_lr/(1.1*np.max(np.real(tmp_ew)))
     return W 

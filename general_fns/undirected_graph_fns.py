@@ -10,7 +10,6 @@ Functions to set up and manipulate graphs.
 
 import numpy as np
 import numpy.linalg as nla
-# import sys, time, os, datetime
 
 def get_edge_list_from_adj_matrix(W, is_symmetric=True, get_wts=False):
     '''Test this again, though glanced at it and looks sane.
@@ -19,9 +18,7 @@ def get_edge_list_from_adj_matrix(W, is_symmetric=True, get_wts=False):
     if is_symmetric:
         edge_list_idx = np.nonzero(np.triu(W,1))
     else:
-        edge_list_idx = np.nonzero(W)
-    
-    # In both cases was returning np.transpose(edge_list_idx) before   
+        edge_list_idx = np.nonzero(W)  
     if get_wts:
         edge_wts = W[edge_list_idx]
         return edge_list_idx, edge_wts
@@ -44,9 +41,6 @@ def symmetrize_matrix(W):
     symmetrize anything). '''
 
     return W + W.T - np.diag(W.diagonal())    
-
-# Retest the indexing on these. I think G[(sel_row_idx, sel_col_idx)] is the same
-# as G[sel_row_idx, sel_col_idx] but check.
 
 def make_random_matrix_given_density(n_vertices, edges, entry_type='uniform_positive', 
     params={}, symmetrize=True):
@@ -81,7 +75,6 @@ def make_random_matrix_given_density(n_vertices, edges, entry_type='uniform_posi
     else:
         return G
 
-#can add more parameters here if needed later
 def make_clustered_graph(n_blocks, n_per_block): 
     n_vertices = n_blocks * n_per_block
     W_without_lr = np.zeros((n_vertices, n_vertices))
@@ -102,7 +95,6 @@ def make_clustered_graph(n_blocks, n_per_block):
     W = W_with_lr/(1.1*np.max(np.real(tmp_ew)))
     return W
 
-#making a more generic clustered graph function and using above for reference. n_per_block is a vector whose entries are the number of nodes in a given block. ex n_p_b = [50,100] will give a 150x150 matrix with blocks of size 50 and 100 respectively.
 def make_imb_clustered_graph(n_per_block, inner_block_edges, inter_block_edges):
     n_vertices = 0
     for each_block in n_per_block:
@@ -124,21 +116,6 @@ def make_imb_clustered_graph(n_per_block, inner_block_edges, inter_block_edges):
     return W  
     
 
-# Not sure I'm using these here, and removed make_random_triu_matrix_given_density, so 
-# commenting out for now.    
-# def make_random_asymmetric_matrix_given_density(n_vertices, edges, entry_type='uniform_positive', params={}):
-#     U1 = make_random_triu_matrix_given_density(n_vertices, edges, entry_type='uniform_positive', params={})
-#     U2 = make_random_triu_matrix_given_density(n_vertices, edges, entry_type='uniform_positive', params={})
-#     return U1 + U2.T
-    
-# def make_latent_variable_matrix(n_vertices, f):
-#     '''Make a matrix where the i,j-th entry is given by
-#     f(i,j).'''
-#     G = np.zeros((n_vertices, n_vertices))
-#     for i in range(n_vertices):
-#         for j in range(n_vertices):
-#             G[i,j] = f(i,j)
-#     return G
 
 def get_laplacian(W):
     '''Returns Laplacian of weighted graph, given by L = D-W,
@@ -157,22 +134,3 @@ def get_signed_laplacian(W):
     wts = np.sum(np.abs(W), axis=0)
     D = np.diag(wts)
     return D - W
-
-
-# Test before using because switched convention on get_edge_list_from_adj_matrix
-# and added a transpose to make up.
-# def get_signed_incidence_matrix(W):
-#     '''Might need to be careful about head and tail if/when I switch to
-#     directed graphs. Using the convention that W[i,j] describes the edge 
-#     from node j to node i.  For symmetric matrix doesn't matter (and don't use this 
-#     for non_symmetric without thinking about it.'''
-    
-#     n_vertices = len(W)
-#     edge_list = np.transpose(get_edge_list_from_adj_matrix(W, is_symmetric=True))
-#     n_edges = len(edge_list)
-
-#     B = np.zeros((n_edges, n_vertices))
-#     for i, edge in enumerate(edge_list):
-#         B[i, edge[0]] = 1
-#         B[i, edge[1]] = -1
-#     return B
