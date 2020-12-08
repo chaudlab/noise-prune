@@ -15,8 +15,7 @@ def symmetrize_matrix(W):
     return W + W.T - np.diag(W.diagonal())
 
 def get_edge_list_from_adj_matrix(W, is_symmetric=False, get_wts=False):
-    '''Test this again, though glanced at it and looks sane.
-    Though fix the non-symmetric case in that it returns self-connections.'''
+    '''Though fix the non-symmetric case in that it returns self-connections.'''
     
     if is_symmetric:
         edge_list_idx = np.nonzero(np.triu(W,1))

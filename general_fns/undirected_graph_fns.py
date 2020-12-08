@@ -12,8 +12,7 @@ import numpy as np
 import numpy.linalg as nla
 
 def get_edge_list_from_adj_matrix(W, is_symmetric=True, get_wts=False):
-    '''Test this again, though glanced at it and looks sane.
-    Though fix the non-symmetric case in that it returns self-connections.'''
+    '''returns indices of edges'''
     
     if is_symmetric:
         edge_list_idx = np.nonzero(np.triu(W,1))
@@ -128,7 +127,7 @@ def get_laplacian(W):
     return D - W
 
 def get_signed_laplacian(W):
-    '''Attempt to generalize Laplacian to negative weights. Construct the
+    '''Generalize Laplacian to negative weights. Construct the
     diagonal of a Laplacian-like operator by summing absolute weights.'''
    
     wts = np.sum(np.abs(W), axis=0)

@@ -28,7 +28,7 @@ def sim_linear_net(A, params):
 def predict_ou_cov(A, B):
     '''Predict the covariance matrix of the OU process of the form
     dx/dt = Ax + Bxi(t),
-    where xi is white noise. Should test again.'''
+    where xi is white noise.'''
 
     N = len(A)
     ew, ev = nla.eig(A)
@@ -37,7 +37,7 @@ def predict_ou_cov(A, B):
     bbt = np.dot(B, B.conjugate().T)
     
     Q_tilde = np.dot(ev_inv, np.dot(bbt, ev_inv.conjugate().T))
-    M = np.zeros((A.shape[0], A.shape[1]), dtype=complex) #this is tilde_C
+    M = np.zeros((A.shape[0], A.shape[1]), dtype=complex) 
 
     for i in range(N):
         for j in range(N):
@@ -62,11 +62,6 @@ def pred_cov_from_white_noise(A, matrix_type='general'):
     normal and should be faster since it can just compute the inverse in that case.
     Also note that this doesn't include an overall sigma^2 scaling factor on the
     variance.
-
-    I've briefly tested the symmetric and general cases though not the normal case
-    (but normal agrees with symmetric for a symmetric matrix). Could stand to do 
-    more testing throughout because the empirical covariance takes a while to 
-    converge. Could maybe do exact OU simulation and use a larger time step.
     '''
 
     if matrix_type == 'symmetric':

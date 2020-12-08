@@ -69,11 +69,6 @@ def get_sparsify_probs(A, normalization={}, return_diffs=False,
     matrix_type='general'):
     
     '''Return noise-prune sampling probabilities. 
-    
-    We're now using the negative definite matrix A (rather than the PSD matrix) 
-    so be careful with signs. Also no longer have the pseudoinverse
-    option and rely on the pred_cov_from_white_noise function, but this means
-    that eigenvalues should NOT be 0.
 
     This works for symmetric matrices too. Just need to zero out probs on one
     side of the diagonal before passing to the sparsification fn.

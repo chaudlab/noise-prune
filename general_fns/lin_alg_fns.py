@@ -10,8 +10,7 @@ import undirected_graph_fns as gf
 def sort_eig(A, ret_ev=False, hermitian=False):
     '''Returns sorted eigenvalues and eigenvectors of A. 
     Modifying slightly to take a hermitian option and will call the appropriate
-    eval functions if so. Tested this quickly but should reecheck since it's so 
-    fundamental. '''
+    eval functions if so.'''
 
     if ret_ev:
         if hermitian:
@@ -34,12 +33,7 @@ def get_norm_dp(v1,v2):
     return np.dot(n1,n2)
 
 def get_pinv(inp_mat):
-    '''Compute the pseudoinverse of inp_mat. Uses the SVD which might be a bit slow, but should 
-    be fine for not huge matrices (and we can think of speeding up later if it seems  like the
-    rate-limiting step). I was occasionally finding a slight discrepancy with the inbuilt la.pinv 
-    function for certain large matrices. It looked like that was down to what cutoff to use before
-    you considered something 0 (we used 1e-8 but la.pinv uses something different), but should 
-    double check that later. '''
+    '''Compute the pseudoinverse of inp_mat.'''
 
     u, s, vh = la.svd(inp_mat)
 
@@ -93,10 +87,9 @@ def shift_to_make_diagonally_dominant(W, shift_type='constant', diag_type='pos')
     constant shift to every diagonal, or adding a diagonal matrix. 
     Note that this function partially takes into account an existing diagonal, 
     but the later functions may not treat the pre-existing diagonal correctly so 
-    be careful when using it with non-zero diagonals.
-    Also note that it assumes that the input diagonals are the same sign as the output.'''
+    be careful when using it with non-zero diagonals.'''
 
-    diag_els = np.diag(W) #sign of the diag matters for computations below
+    diag_els = np.diag(W) 
     
     row_sums = get_off_diag_row_sums(W)
     if diag_type=='pos':
